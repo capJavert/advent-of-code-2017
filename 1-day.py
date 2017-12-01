@@ -15,13 +15,11 @@ def get_and_prepare_data_string():
 def main():
     digit_sequence = get_and_prepare_data_string()
 
+    halfway_step = int(len(digit_sequence)/2)
     sum_count = 0
 
     for (i, character) in enumerate(digit_sequence):
-        if i == len(digit_sequence)-1:
-            next_character = digit_sequence[0]
-        else:
-            next_character = digit_sequence[i+1]
+        next_character = digit_sequence[(i+halfway_step) % len(digit_sequence)]
 
         if character == next_character:
             sum_count += int(next_character)
