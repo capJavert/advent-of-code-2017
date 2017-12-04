@@ -21,11 +21,17 @@ def main():
         words = []
 
         for word in line.split(" "):
-            if word in words:
+            characters = {}
+
+            for c in word:
+                if c not in characters:
+                    characters[c] = c
+
+            if characters in words:
                 is_valid = False
                 break
 
-            words.append(word)
+            words.append(characters)
 
         if is_valid:
             valid_passphrases += 1
