@@ -20,7 +20,12 @@ def main():
 
     while index < len(instructions):
         jump = int(instructions[index])
-        instructions[index] = jump+1
+
+        if jump >= 3:
+            instructions[index] = jump - 1
+        else:
+            instructions[index] = jump + 1
+
         index += jump
 
         steps += 1
