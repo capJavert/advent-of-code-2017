@@ -27,6 +27,8 @@ def main():
         if inst[4] not in registers:
             registers[inst[4]] = 0
 
+    max_value = 0
+
     for i in range(len(instructions)):
         inst = instructions[i].split(" ")
 
@@ -39,7 +41,10 @@ def main():
             'registers["'+inst[0]+'"]'+operator+inst[2]+' if '+'registers["'+inst[4]+'"] '+' '.join(inst[5:])+' else 0'
         )
 
-    print(registers[max(registers, key=registers.get)])
+        if registers[max(registers, key=registers.get)] > max_value:
+            max_value = registers[max(registers, key=registers.get)]
+
+    print(max_value)
 
 
 main()
