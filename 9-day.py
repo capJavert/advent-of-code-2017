@@ -15,10 +15,9 @@ def get_and_prepare_data_string():
 def main():
     data = get_and_prepare_data_string()
 
-    score = 0
     ignore = False
     garbage = False
-    groups = []
+    garbage_counter = 0
 
     for i, c in enumerate(data):
         if ignore:
@@ -29,20 +28,24 @@ def main():
             ignore = True
             continue
 
-        if c == "<":
+        if c == "<" and not garbage:
             garbage = True
+            continue
 
         if c == ">":
             garbage = False
+            continue
 
         if c == "{" and not garbage:
-            groups.append(len(groups)+1)
+            continue
 
         if c == "}" and not garbage:
-            score += groups[-1]
-            groups.pop()
+            continue
 
-    print(score)
+        if garbage:
+            garbage_counter += 1
+
+    print(garbage_counter)
 
 
 main()
