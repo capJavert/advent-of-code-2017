@@ -13,20 +13,19 @@ def get_and_prepare_data_string():
 
 
 def into_the_pipe(current, previous):
-    global root_count
-
     previous.append(current)
-    root_count += 1
 
     for pipe in pipes[current]:
         if pipe in previous:
             continue
 
-        into_the_pipe(pipe, previous)
+        previous = into_the_pipe(pipe, previous)
+
+    return previous
 
 
-root_count = 0
 pipes = {}
+groups = []
 
 
 def main():
@@ -35,9 +34,12 @@ def main():
     for pipe in data:
         pipes[pipe.split(" <-> ")[0]] = pipe.split(" <-> ")[1].split(", ")
 
-    into_the_pipe("0", [])
+    for pipe in pipes:
+        group = set(into_the_pipe(pipe, []))
+        if group not in groups:
+            groups.append(set(group))
 
-    print(root_count)
+    print(len(groups))
 
 
 main()
