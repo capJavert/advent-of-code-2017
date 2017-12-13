@@ -1,4 +1,5 @@
 import requests
+import copy
 
 
 def get_and_prepare_data_string():
@@ -7,7 +8,6 @@ def get_and_prepare_data_string():
     """
 
     request = requests.get("https://pastebin.com/raw/0kjSuzNx")
-    # request = requests.get("https://pastebin.com/raw/LThCe14f")
     request.encoding = 'ISO-8859-1'
 
     return request.text
@@ -15,24 +15,44 @@ def get_and_prepare_data_string():
 
 def main():
     records = get_and_prepare_data_string().splitlines()
-    layers = {r.split(": ")[0]: int(r.split(": ")[1]) for r in records}
+    layers = {r.split(": ")[0]: {"range": int(r.split(": ")[1]), "position": 0, "direction": True} for r in records}
+    cached = copy.deepcopy(layers)
 
-    severity = 0
+    busted = False
+    delay = 0
 
-    for i in range(int(records[-1].split(": ")[0])+1):
-        if str(i) in layers:
-            firewall_index = 0
-            direction = True
-            for j in range(i):
-                firewall_index += 1 if direction else -1
+    while True:
+        if delay > 0:
+            layers = copy.deepcopy(cached)
 
-                if firewall_index == layers[str(i)]-1 or firewall_index == 0:
-                    direction = not direction
+            for key in layers.keys():
+                layers[key]["position"] += 1 if layers[key]["direction"] else -1
 
-            if firewall_index == 0:
-                severity += int(i)*layers[str(i)]
+                if layers[key]["position"] == layers[key]["range"] - 1 or layers[key]["position"] == 0:
+                    layers[key]["direction"] = not layers[key]["direction"]
 
-    print(severity)
+        cached = copy.deepcopy(layers)
+
+        for i in range(int(records[-1].split(": ")[0])+1):
+            current = str(i)
+            if current in layers:
+                if layers[current]["position"] == 0:
+                    busted = True
+                    break
+
+            for key in layers.keys():
+                layers[key]["position"] += 1 if layers[key]["direction"] else -1
+
+                if layers[key]["position"] == layers[key]["range"] - 1 or layers[key]["position"] == 0:
+                    layers[key]["direction"] = not layers[key]["direction"]
+
+        if busted:
+            busted = False
+            delay += 1
+        else:
+            break
+
+    print(delay)
 
 
 main()
