@@ -1,6 +1,8 @@
 import requests
 import threading
 
+import time
+
 
 def get_and_prepare_data_string():
     """
@@ -79,6 +81,8 @@ class Program (threading.Thread):
 
                     if len(frequencies[self.thread_id]) > 0:
                         registers[command[1]] = frequencies[self.thread_id].pop(0)
+                        print('\a')
+                        time.sleep(0.1)
                         lock.release()
                     elif len(frequencies[self.thread_id]) == 0 and len(frequencies[self.other_id]) == 0:
                         lock.release()
