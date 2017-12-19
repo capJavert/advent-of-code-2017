@@ -7,7 +7,6 @@ def get_and_prepare_data_string():
     """
 
     request = requests.get("https://pastebin.com/raw/Eg7eq2Sd")
-    # request = requests.get("https://pastebin.com/raw/KwQfM3Dv")
     request.encoding = 'ISO-8859-1'
 
     return request.text
@@ -19,6 +18,7 @@ def main():
     letters = [str(chr(i)) for i in range(65, 91)]
     collected = []
     direction = "D"
+    steps = 0
 
     p = [0, maze[0].index("|")]
 
@@ -48,6 +48,8 @@ def main():
                     direction = "L"
 
         if character != " ":
+            steps += 1
+
             if character in letters:
                 collected.append(character)
 
@@ -65,7 +67,7 @@ def main():
         elif character == " ":
             break
 
-    print("".join(collected))
+    print("".join(collected), steps)
 
 
 main()
