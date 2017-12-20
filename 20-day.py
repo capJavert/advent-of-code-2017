@@ -7,7 +7,6 @@ def get_and_prepare_data_string():
     """
 
     request = requests.get("https://pastebin.com/raw/r3LEuqnG")
-    # request = requests.get("https://pastebin.com/raw/R1xLQQfQ")
     request.encoding = 'ISO-8859-1'
 
     return request.text
@@ -21,24 +20,43 @@ def main():
         .replace(">", "")\
         .splitlines()
 
-    closest = (None, None)
+    particles = {}
 
     for (index, item) in enumerate(particle_data):
         item = item.split(", ")
 
-        particle = {
+        particles[str(index)] = {
             "p": [int(i) for i in item[0].split(",")],
             "v": [int(i) for i in item[1].split(",")],
-            "a": [int(i) for i in item[2].split(",")]
+            "a": [int(i) for i in item[2].split(",")],
         }
 
-        movement = (abs(particle["a"][0])+abs(particle["a"][1])+abs(particle["a"][2])) * \
-                   (abs(particle["v"][0])+abs(particle["v"][1])+abs(particle["v"][2]))
+    for t in range(100):  # maybe I had luck with this
+        collisions = {}
 
-        if movement < closest[1] or closest[1] is None:
-            closest = (index, movement)
+        for i, particle in particles.items():
+            particle["v"][0] += particle["a"][0]
+            particle["v"][1] += particle["a"][1]
+            particle["v"][2] += particle["a"][2]
+            particle["p"][0] += particle["v"][0]
+            particle["p"][1] += particle["v"][1]
+            particle["p"][2] += particle["v"][2]
 
-    print(closest[0])
+            particles[i] = particle
+
+            pos = ",".join([str(p) for p in particle["p"]])
+
+            if pos not in collisions:
+                collisions[pos] = [i]
+            else:
+                collisions[pos].append(i)
+
+        for _, group in collisions.items():
+            if len(group) > 1:
+                for j in group:
+                    del particles[j]
+
+    print(len(particles))
 
 
 main()
