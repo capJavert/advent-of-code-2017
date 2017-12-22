@@ -37,7 +37,7 @@ def main():
 
             script_of_enhancement[str(pattern)] = enhancement
 
-    for x in range(5):
+    for x in range(18):
         if len(art) % 2 == 0:
             n = np.array([])
 
