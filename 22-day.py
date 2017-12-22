@@ -7,7 +7,6 @@ def get_and_prepare_data_string():
     """
 
     request = requests.get("https://pastebin.com/raw/M1U71PJX")
-    # request = requests.get("https://pastebin.com/raw/RKjqkZem")
     request.encoding = 'ISO-8859-1'
 
     return request.text
@@ -26,21 +25,23 @@ def main():
     d = 1
     infections = 0
 
-    for x in range(10000):
+    for x in range(10000000):
         if grid[str(p)] == "#":
             d = (d + 1) % 4
-        else:
+        elif grid[str(p)] == "F":
+            d = (d + 2) % 4
+        elif grid[str(p)] == ".":
             d = (d - 1) % 4
 
-        if str(p) in grid:
-            if grid[str(p)] == "#":
-                grid[str(p)] = "."
-            else:
-                grid[str(p)] = "#"
-                infections += 1
-        else:
+        if grid[str(p)] == ".":
+            grid[str(p)] = "W"
+        elif grid[str(p)] == "W":
             grid[str(p)] = "#"
             infections += 1
+        elif grid[str(p)] == "#":
+            grid[str(p)] = "F"
+        elif grid[str(p)] == "F":
+            grid[str(p)] = "."
 
         if directions[d] == "U":
             p[0] -= 1
