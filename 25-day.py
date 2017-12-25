@@ -65,7 +65,7 @@ def main():
                 p += 1
                 state = "C"
 
-    print(Counter(infinity_tape.values())[1])
+    print(Counter(infinity_tape.values())[1], "wink wink")
 
 
 main()
